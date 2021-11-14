@@ -1,0 +1,25 @@
+.numOfPlayers {
+  display: flex;
+
+  gap: 20px;
+}
+
+input {
+  background-color: lightgray;
+  text-align: center;
+}
+
+.buttonText {
+  font-weight: bold;
+}
+
+.btn {
+  font-weight: bold;
+}
+
+.thediv {
+  background-color: red;
+}
+
+#NoRootDiv {
+}
