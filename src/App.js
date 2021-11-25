@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>Match Maker</p>
+        {/* <p>Match Maker</p> */}
         <Start />
       </header>
     </div>
