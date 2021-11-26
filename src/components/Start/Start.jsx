@@ -11,6 +11,7 @@ export function Start(props) {
   const [estado, setEstado] = useState(0);
   let matchesTotal6;
   const [Matches, setMatches] = useState([]);
+  const [Points, setPoints] = useState(0);
 
   function funcionDeClick(e) {
     e.preventDefault();
@@ -43,9 +44,25 @@ export function Start(props) {
     setEstado(estadoTemp);
   };
 
-  const back = () => {
-    const estadoTemp = estado - 1;
-    setEstado(estadoTemp);
+  const matchResult = (e, id) => {
+    // console.log(e.target.value);
+    console.log("id", id);
+
+    setPoints(e.target.value);
+    const points = Points;
+    // console.log("MatrchesId", Matches[0][2]);
+    const playersScoring = Matches.find((player) => player[2] === id);
+    console.log("playersScoring", playersScoring);
+    playersScoring[0][0].currentPoints = e.target.value;
+    playersScoring[0][1].currentPoints = e.target.value;
+    console.log("current points", playersScoring[0][0].currentPoints);
+    //    setMatches([...Matches], playersScoring);
+    // playerToChange.name = playerName;
+    // setPlayers(playersCopy);
+  };
+
+  const matchResult2 = (e) => {
+    console.log(e.target.value);
   };
 
   function generateMatch(players) {
@@ -283,12 +300,12 @@ export function Start(props) {
                   {" "}
                   <input
                     type="text"
-
+                    onChange={(e) => matchResult(e, match[2])}
                     // onChange={(event) => setNumberOfPlayers(event.target.value)}
                   />{" "}
                   <input
                     type="text"
-
+                    onChange={(e) => matchResult2(e)}
                     // onChange={(event) => setNumberOfPlayers(event.target.value)}
                   />{" "}
                 </div>
@@ -298,6 +315,7 @@ export function Start(props) {
             <Button
               variant="btn btn-light submitMatchButton"
               type="submit"
+
               // onClick={(e) => generateMatch(players)}
             >
               Submit Result
