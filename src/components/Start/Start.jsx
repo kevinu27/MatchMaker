@@ -13,6 +13,7 @@ export function Start(props) {
   const [Matches, setMatches] = useState([]);
   const [Points, setPoints] = useState(0);
 
+  let playersSorted = [];
   function funcionDeClick(e) {
     e.preventDefault();
     setEstado("iniciado");
@@ -56,13 +57,29 @@ export function Start(props) {
     playersScoring[0][0].currentPoints = e.target.value;
     playersScoring[0][1].currentPoints = e.target.value;
     console.log("current points", playersScoring[0][0].currentPoints);
+
+    //    const sorted = [...players].sort((a, b) =>
+    // {    return b.age - a.age;}
+    //   )
+    //    setPlayers(...sorted)
+
     //    setMatches([...Matches], playersScoring);
     // playerToChange.name = playerName;
     // setPlayers(playersCopy);
   };
 
-  const matchResult2 = (e) => {
-    console.log(e.target.value);
+  const matchResult2 = (e, id) => {
+    // console.log(e.target.value);
+    console.log("id", id);
+
+    setPoints(e.target.value);
+    const points2 = Points;
+    // console.log("MatrchesId", Matches[0][2]);
+    const playersScoring2 = Matches.find((player) => player[2] === id);
+    console.log("playersScoring2", playersScoring2);
+    playersScoring2[1][0].currentPoints = e.target.value;
+    playersScoring2[1][1].currentPoints = e.target.value;
+    console.log("current points", playersScoring2[0][0].currentPoints);
   };
 
   function generateMatch(players) {
@@ -305,7 +322,7 @@ export function Start(props) {
                   />{" "}
                   <input
                     type="text"
-                    onChange={(e) => matchResult2(e)}
+                    onChange={(e) => matchResult2(e, match[2])}
                     // onChange={(event) => setNumberOfPlayers(event.target.value)}
                   />{" "}
                 </div>
@@ -325,8 +342,26 @@ export function Start(props) {
               <p> Current Ranking</p>
             </div>
 
-            <div>
-              <p> Ranking</p>
+            <div className="MatchRow2">
+              <div className="playerRanking2">
+                <div className="playerRankingDiv2">
+                  <p className="player">Players</p>{" "}
+                </div>
+                <div className="playerRankingDiv2">
+                  <p className="player">Points</p>{" "}
+                </div>
+              </div>
+
+              {players.map((player) => (
+                <div className="playerRanking">
+                  <div className="playerRankingDiv">
+                    <p className="player">{player.name}</p>{" "}
+                  </div>
+                  <div className="playerRankingDiv">
+                    <p className="player">{player.currentPoints}</p>{" "}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         ) : (

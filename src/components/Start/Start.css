@@ -149,3 +149,48 @@ input {
   padding-left: 1%;
   margin-top: 1%;
 }
+
+.playerRanking {
+  display: flex;
+  justify-content: flex-start;
+  /* width: 100%; */
+  /* border: 2px solid red; */
+  justify-content: space-between;
+}
+
+.playerRanking p {
+  margin-right: 10px;
+  /* border: 2px solid green; */
+}
+.playerRankingDiv {
+  display: flex;
+  /* border: 2px solid orange; */
+}
+
+.MatchRow2 {
+  display: flex;
+  flex-direction: column;
+  align-items: space-around;
+  width: 50%;
+  height: 100%;
+  /* border: 2px solid green; */
+  justify-content: center;
+  /* border: 12px solid green; */
+  /* margin-bottom: 0%; */
+}
+
+.playerRanking2 {
+  display: flex;
+  justify-content: space-around;
+  /* width: 100%; */
+  /* border: 2px solid blue; */
+}
+
+.playerRanking2 p {
+  margin-right: 10px;
+  /* border: 2px solid green; */
+}
+.playerRankingDiv2 {
+  display: flex;
+  /* border: 2px solid orange; */
+}
