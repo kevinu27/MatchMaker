@@ -156,6 +156,8 @@ input {
   /* width: 100%; */
   /* border: 2px solid red; */
   justify-content: space-between;
+  padding-right: 20%;
+  padding-left: 15%;
 }
 
 .playerRanking p {

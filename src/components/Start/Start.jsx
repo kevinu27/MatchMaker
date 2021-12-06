@@ -52,16 +52,29 @@ export function Start(props) {
     setPoints(e.target.value);
     const points = Points;
     // console.log("MatrchesId", Matches[0][2]);
-    const playersScoring = Matches.find((player) => player[2] === id);
+    const playersScoring = Matches.find((player) => player[2] === id); ///player[2] ESTO MAS QUE PLAYERS SERIA PARTIDO, EL 2 ES EL Id del partido
     console.log("playersScoring", playersScoring);
     playersScoring[0][0].currentPoints = e.target.value;
     playersScoring[0][1].currentPoints = e.target.value;
     console.log("current points", playersScoring[0][0].currentPoints);
+    sortPlayers();
 
     //    const sorted = [...players].sort((a, b) =>
     // {    return b.age - a.age;}
     //   )
     //    setPlayers(...sorted)
+
+    //    setMatches([...Matches], playersScoring);
+    // playerToChange.name = playerName;
+    // setPlayers(playersCopy);
+  };
+
+  const sortPlayers = () => {
+    console.log(players);
+    const sorted = [...players].sort((a, b) => {
+      return b.currentPoints - a.currentPoints;
+    });
+    setPlayers(sorted);
 
     //    setMatches([...Matches], playersScoring);
     // playerToChange.name = playerName;
@@ -80,6 +93,7 @@ export function Start(props) {
     playersScoring2[1][0].currentPoints = e.target.value;
     playersScoring2[1][1].currentPoints = e.target.value;
     console.log("current points", playersScoring2[0][0].currentPoints);
+    sortPlayers();
   };
 
   function generateMatch(players) {
@@ -234,7 +248,7 @@ export function Start(props) {
       </div>{" "}
       <div className="labelNPlayer">
         {" "}
-        <p> Number of players </p>
+        {estado === 0 ? <p> Number of players </p> : <div> </div>}
       </div>
       <div id="NoRootDiv">
         {estado === 0 ? (
@@ -317,12 +331,13 @@ export function Start(props) {
                   {" "}
                   <input
                     type="text"
-                    onChange={(e) => matchResult(e, match[2])}
+                    onBlur={(e) => matchResult(e, match[2])}
                     // onChange={(event) => setNumberOfPlayers(event.target.value)}
                   />{" "}
                   <input
                     type="text"
-                    onChange={(e) => matchResult2(e, match[2])}
+                    // onChange={(e) => matchResult2(e, match[2])}
+                    onBlur={(e) => matchResult2(e, match[2])}
                     // onChange={(event) => setNumberOfPlayers(event.target.value)}
                   />{" "}
                 </div>
@@ -332,8 +347,7 @@ export function Start(props) {
             <Button
               variant="btn btn-light submitMatchButton"
               type="submit"
-
-              // onClick={(e) => generateMatch(players)}
+              onClick={(e) => sortPlayers()}
             >
               Submit Result
             </Button>
@@ -343,14 +357,14 @@ export function Start(props) {
             </div>
 
             <div className="MatchRow2">
-              <div className="playerRanking2">
+              {/* <div className="playerRanking2">
                 <div className="playerRankingDiv2">
                   <p className="player">Players</p>{" "}
                 </div>
                 <div className="playerRankingDiv2">
                   <p className="player">Points</p>{" "}
                 </div>
-              </div>
+              </div> */}
 
               {players.map((player) => (
                 <div className="playerRanking">
