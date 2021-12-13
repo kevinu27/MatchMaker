@@ -4,17 +4,22 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import ReactDOM from "react-dom";
 import React, { useState } from "react";
+import { Header } from "../Header/Header";
+import { NumberOfPlayersInput } from "../NumberOfPLayers/NumberOfPLayers";
+import { NameSkills } from "../NamesSkills/NamesSkills";
 
 export function Start(props) {
+  const [sensibility, setSensibility] = useState("0");
   const [numberOfPlayers, setNumberOfPlayers] = useState("0");
   const [players, setPlayers] = useState([]);
   const [estado, setEstado] = useState(0);
   let matchesTotal6;
   const [Matches, setMatches] = useState([]);
-  const [Points, setPoints] = useState(0);
+  const [Points, setPoints] = useState([]);
 
   let playersSorted = [];
-  function funcionDeClick(e) {
+
+  const funcionDeClick = (e) => {
     e.preventDefault();
     setEstado("iniciado");
 
@@ -25,7 +30,7 @@ export function Start(props) {
     }
     setPlayers(newPlayers);
     setEstado(1);
-  }
+  };
 
   const changePlayerName = (playerId, playerName) => {
     const playersCopy = [...players];
@@ -40,33 +45,35 @@ export function Start(props) {
     setPlayers(playersCopy);
   };
 
-  const back = () => {
-    const estadoTemp = estado - 1;
-    setEstado(estadoTemp);
-  };
+  function back() {
+    setEstado(estado - 1);
+    console.log("back");
+  }
+  function inicio() {
+    setEstado(0);
+    console.log("inicio");
+  }
+
+  function getNumberOfPlayers(event) {
+    setNumberOfPlayers(event.target.value);
+  }
 
   const matchResult = (e, id) => {
     // console.log(e.target.value);
-    console.log("id", id);
-
-    setPoints(e.target.value);
+    //console.log("id", id);
+    let pointsToPush = Points.concat(e.target.value);
+    setPoints(pointsToPush);
+    console.log("Pointsssssss", Points);
     const points = Points;
     // console.log("MatrchesId", Matches[0][2]);
-    const playersScoring = Matches.find((player) => player[2] === id); ///player[2] ESTO MAS QUE PLAYERS SERIA PARTIDO, EL 2 ES EL Id del partido
+    const playersScoring = Matches.find((match) => match[2] === id); // el [2] es la posicion en el array que es id, asi
     console.log("playersScoring", playersScoring);
     playersScoring[0][0].currentPoints = e.target.value;
     playersScoring[0][1].currentPoints = e.target.value;
+    ///let array = e.target.vale
+    /// setPoints(...Point + array )
     console.log("current points", playersScoring[0][0].currentPoints);
     sortPlayers();
-
-    //    const sorted = [...players].sort((a, b) =>
-    // {    return b.age - a.age;}
-    //   )
-    //    setPlayers(...sorted)
-
-    //    setMatches([...Matches], playersScoring);
-    // playerToChange.name = playerName;
-    // setPlayers(playersCopy);
   };
 
   const sortPlayers = () => {
@@ -75,10 +82,6 @@ export function Start(props) {
       return b.currentPoints - a.currentPoints;
     });
     setPlayers(sorted);
-
-    //    setMatches([...Matches], playersScoring);
-    // playerToChange.name = playerName;
-    // setPlayers(playersCopy);
   };
 
   const matchResult2 = (e, id) => {
@@ -98,8 +101,6 @@ export function Start(props) {
 
   function generateMatch(players) {
     setEstado(2);
-
-    const sensibility = 10;
 
     let matches = [];
     let matchesTotal = [];
@@ -196,7 +197,6 @@ export function Start(props) {
       }
     }
 
-    // console.log("matchesTotal6", matchesTotal6);
     ///7-
     let matchesTotalFinal = [];
     for (let i = 0; i < matchesTotal6.length; i++) {
@@ -216,58 +216,41 @@ export function Start(props) {
       ];
     }
     setMatches(matchesTotalFinal);
-
-    let BalancedMatch = matchesTotal7.filter((elm) => {
+    let BalancedMatch;
+    BalancedMatch = matchesTotalFinal.filter((elm) => {
       if (
         Math.abs(
           elm[0][0].skills +
             elm[0][1].skills -
-            elm[1][0].skills -
-            elm[1][1].skills
+            (elm[1][0].skills + elm[1][1].skills)
         ) <= sensibility
       ) {
+        console.log("elm", elm);
         return true;
       }
     });
+    console.log("BalancedMatch", BalancedMatch);
+    setMatches(BalancedMatch);
   }
+  const sliderChange = (e) => {
+    setSensibility(e.target.value);
+  };
+
   //////////////////////////////////////////////////////////////////////////////////////Return/////////////////////////////////////////////////////////////////////////////
   return (
     <>
-      <div className="header">
-        <div className="subheader">
-          <div onClick={() => back()}>Back</div>
-          <div
-            onClick={() => {
-              setEstado(0);
-            }}
-          >
-            Match Maker
-          </div>
-          <div>User</div>
-        </div>
-      </div>{" "}
+      <Header back={back} inicio={inicio} />
+
       <div className="labelNPlayer">
-        {" "}
         {estado === 0 ? <p> Number of players </p> : <div> </div>}
       </div>
       <div id="NoRootDiv">
         {estado === 0 ? (
           <>
-            <div className="numOfPlayers">
-              <input
-                className="mr-5"
-                type="number"
-                value={numberOfPlayers}
-                onChange={(event) => setNumberOfPlayers(event.target.value)}
-              />
-              <Button
-                variant="btn btn-light"
-                type="submit"
-                onClick={(e) => funcionDeClick(e)}
-              >
-                Generar numero de players
-              </Button>
-            </div>
+            <NumberOfPlayersInput
+              numberOfPlayer={getNumberOfPlayers}
+              funcion={funcionDeClick}
+            />
           </>
         ) : (
           <div> </div>
@@ -278,6 +261,22 @@ export function Start(props) {
               <div className="label"> Player Name </div>
               <div className="label"> Player Skill Level</div>
             </div>
+
+            <label for="customRange1" class="form-label">
+              Get rid of the weakest: {sensibility}
+            </label>
+            <input
+              className="slider"
+              type="range"
+              class="form-range"
+              id="customRange1"
+              min="0"
+              max="10"
+              steps="1"
+              value={sensibility}
+              onChange={sliderChange}
+            />
+
             {players.map((player) => (
               <div className="divInputs">
                 <input
