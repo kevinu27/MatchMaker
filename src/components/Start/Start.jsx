@@ -61,15 +61,31 @@ export function Start(props) {
   const matchResult = (e, id) => {
     // console.log(e.target.value);
     //console.log("id", id);
-    let pointsToPush = Points.concat(e.target.value);
+    let pointsToPush = Points.concat(parseInt(e.target.value));
+    console.log(
+      "los pointsToPush que acabo de meter en el array",
+      pointsToPush
+    );
+
+    ///reduce
+    /*
+    let pointsTotal = pointsToPush.reduce(
+      (previousValue, currentValue) => previousValue + currentValue
+    );*/
+
+    const reducer = (previousValue, currentValue) =>
+      previousValue + currentValue;
+    console.log("pointsToPush", pointsToPush.reduce(reducer));
+    let a = pointsToPush.reduce(reducer);
+
     setPoints(pointsToPush);
     console.log("Pointsssssss", Points);
-    const points = Points;
+    //const points = Points;
     // console.log("MatrchesId", Matches[0][2]);
     const playersScoring = Matches.find((match) => match[2] === id); // el [2] es la posicion en el array que es id, asi
     console.log("playersScoring", playersScoring);
-    playersScoring[0][0].currentPoints = e.target.value;
-    playersScoring[0][1].currentPoints = e.target.value;
+    playersScoring[0][0].currentPoints = a;
+    playersScoring[0][1].currentPoints = a;
     ///let array = e.target.vale
     /// setPoints(...Point + array )
     console.log("current points", playersScoring[0][0].currentPoints);
