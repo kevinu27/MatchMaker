@@ -25,7 +25,13 @@ export function Start(props) {
 
     const newPlayers = [];
     for (let i = 0; i < numberOfPlayers; i++) {
-      const newPlayer = { name: "", id: i, skills: 0, currentPoints: 0 };
+      const newPlayer = {
+        name: "",
+        id: i,
+        skills: 0,
+        currentPoints: [0],
+        displayPoints: 0,
+      }; ///atento esto era un int antes de hacer la prueba con array
       newPlayers.push(newPlayer);
     }
     setPlayers(newPlayers);
@@ -58,61 +64,116 @@ export function Start(props) {
     setNumberOfPlayers(event.target.value);
   }
 
+  // const matchResult = (e, id) => {
+  //   // console.log(e.target.value);
+  //   //console.log("id", id);
+  //   let pointsToPush = Points.concat(parseInt(e.target.value));
+  //   console.log(
+  //     "los pointsToPush que acabo de meter en el array",
+  //     pointsToPush
+  //   );
+
+  //   ///reduce
+  //   /*
+  //   let pointsTotal = pointsToPush.reduce(
+  //     (previousValue, currentValue) => previousValue + currentValue
+  //   );*/
+
+  //   const reducer = (previousValue, currentValue) =>
+  //     previousValue + currentValue;
+  //   console.log("pointsToPush", pointsToPush.reduce(reducer));
+  //   let a = pointsToPush.reduce(reducer);
+
+  //   setPoints(pointsToPush);
+  //   console.log("Pointsssssss", Points);
+  //   //const points = Points;
+  //   // console.log("MatrchesId", Matches[0][2]);
+  //   const playersScoring = Matches.find((match) => match[2] === id); // el [2] es la posicion en el array que es id, asi
+  //   console.log("playersScoring", playersScoring);
+  //   playersScoring[0][0].currentPoints = a;
+  //   playersScoring[0][1].currentPoints = a;
+  //   ///let array = e.target.vale
+  //   /// setPoints(...Point + array )
+  //   console.log("current points", playersScoring[0][0].currentPoints);
+  //   sortPlayers();
+  // };
+
   const matchResult = (e, id) => {
-    // console.log(e.target.value);
-    //console.log("id", id);
-    let pointsToPush = Points.concat(parseInt(e.target.value));
-    console.log(
-      "los pointsToPush que acabo de meter en el array",
-      pointsToPush
-    );
+    if (e.target.value !== "") {
+      let pointsToPush = Points.concat(parseInt(e.target.value));
+      console.log(
+        "los pointsToPush que acabo de meter en el array",
+        pointsToPush
+      );
+      const reducer = (previousValue, currentValue) =>
+        previousValue + currentValue;
+      console.log("pointsToPush", pointsToPush.reduce(reducer));
+      let a = pointsToPush.reduce(reducer);
 
-    ///reduce
-    /*
-    let pointsTotal = pointsToPush.reduce(
-      (previousValue, currentValue) => previousValue + currentValue
-    );*/
+      setPoints(pointsToPush);
+      console.log("Pointsssssss", Points);
+      //const points = Points;
+      // console.log("MatrchesId", Matches[0][2]);
+      const playersScoring = Matches.find((match) => match[2] === id); // el [2] es la posicion en el array que es id, asi
+      console.log("playersScoring", playersScoring);
 
-    const reducer = (previousValue, currentValue) =>
-      previousValue + currentValue;
-    console.log("pointsToPush", pointsToPush.reduce(reducer));
-    let a = pointsToPush.reduce(reducer);
-
-    setPoints(pointsToPush);
-    console.log("Pointsssssss", Points);
-    //const points = Points;
-    // console.log("MatrchesId", Matches[0][2]);
-    const playersScoring = Matches.find((match) => match[2] === id); // el [2] es la posicion en el array que es id, asi
-    console.log("playersScoring", playersScoring);
-    playersScoring[0][0].currentPoints = a;
-    playersScoring[0][1].currentPoints = a;
-    ///let array = e.target.vale
-    /// setPoints(...Point + array )
-    console.log("current points", playersScoring[0][0].currentPoints);
-    sortPlayers();
+      playersScoring[0][0].currentPoints =
+        playersScoring[0][0].currentPoints.concat(parseInt(e.target.value));
+      playersScoring[0][0].displayPoints =
+        playersScoring[0][0].currentPoints.reduce(reducer);
+      playersScoring[0][1].currentPoints =
+        playersScoring[0][1].currentPoints.concat(parseInt(e.target.value));
+      playersScoring[0][1].displayPoints =
+        playersScoring[0][1].currentPoints.reduce(reducer);
+      console.log("DisplayPoint", playersScoring[0][0].displayPoints);
+      ///let array = e.target.vale
+      /// setPoints(...Point + array )
+      console.log("current points", playersScoring[0][0].currentPoints);
+      sortPlayers();
+    }
   };
 
   const sortPlayers = () => {
     console.log(players);
     const sorted = [...players].sort((a, b) => {
-      return b.currentPoints - a.currentPoints;
+      return b.displayPoints - a.displayPoints;
     });
     setPlayers(sorted);
   };
 
   const matchResult2 = (e, id) => {
-    // console.log(e.target.value);
-    console.log("id", id);
+    if (e.target.value !== "") {
+      let pointsToPush = Points.concat(parseInt(e.target.value));
+      console.log(
+        "los pointsToPush que acabo de meter en el array",
+        pointsToPush
+      );
+      const reducer = (previousValue, currentValue) =>
+        previousValue + currentValue;
+      console.log("pointsToPush", pointsToPush.reduce(reducer));
+      let a = pointsToPush.reduce(reducer);
 
-    setPoints(e.target.value);
-    const points2 = Points;
-    // console.log("MatrchesId", Matches[0][2]);
-    const playersScoring2 = Matches.find((player) => player[2] === id);
-    console.log("playersScoring2", playersScoring2);
-    playersScoring2[1][0].currentPoints = e.target.value;
-    playersScoring2[1][1].currentPoints = e.target.value;
-    console.log("current points", playersScoring2[0][0].currentPoints);
-    sortPlayers();
+      setPoints(pointsToPush);
+      console.log("Pointsssssss", Points);
+      //const points = Points;
+      // console.log("MatrchesId", Matches[0][2]);
+      const playersScoring = Matches.find((match) => match[2] === id); // el [2] es la posicion en el array que es id, asi
+      console.log("playersScoring", playersScoring);
+
+      playersScoring[1][0].currentPoints =
+        playersScoring[1][0].currentPoints.concat(parseInt(e.target.value));
+      playersScoring[1][0].displayPoints =
+        playersScoring[1][0].currentPoints.reduce(reducer);
+      playersScoring[1][1].currentPoints =
+        playersScoring[1][1].currentPoints.concat(parseInt(e.target.value));
+      playersScoring[1][1].displayPoints =
+        playersScoring[1][1].currentPoints.reduce(reducer);
+      console.log("DisplayPoint", playersScoring[0][0].displayPoints);
+      ///let array = e.target.vale
+      /// setPoints(...Point + array )
+      console.log("current points", playersScoring[0][0].currentPoints);
+      sortPlayers();
+    }
   };
 
   function generateMatch(players) {
@@ -372,22 +433,13 @@ export function Start(props) {
             </div>
 
             <div className="MatchRow2">
-              {/* <div className="playerRanking2">
-                <div className="playerRankingDiv2">
-                  <p className="player">Players</p>{" "}
-                </div>
-                <div className="playerRankingDiv2">
-                  <p className="player">Points</p>{" "}
-                </div>
-              </div> */}
-
               {players.map((player) => (
                 <div className="playerRanking">
                   <div className="playerRankingDiv">
                     <p className="player">{player.name}</p>{" "}
                   </div>
                   <div className="playerRankingDiv">
-                    <p className="player">{player.currentPoints}</p>{" "}
+                    <p className="player">{player.displayPoints}</p>{" "}
                   </div>
                 </div>
               ))}
