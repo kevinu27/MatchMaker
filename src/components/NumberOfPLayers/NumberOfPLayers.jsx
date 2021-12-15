@@ -16,7 +16,7 @@ export function NumberOfPlayersInput(props) {
           type="submit"
           onClick={(e) => props.funcion(e)}
         >
-          Generar numero de players
+          Generate players
         </Button>
       </div>
     </>

@@ -31,7 +31,7 @@ export function Start(props) {
         skills: 0,
         currentPoints: [0],
         displayPoints: 0,
-      }; ///atento esto era un int antes de hacer la prueba con array
+      };
       newPlayers.push(newPlayer);
     }
     setPlayers(newPlayers);
@@ -64,40 +64,6 @@ export function Start(props) {
     setNumberOfPlayers(event.target.value);
   }
 
-  // const matchResult = (e, id) => {
-  //   // console.log(e.target.value);
-  //   //console.log("id", id);
-  //   let pointsToPush = Points.concat(parseInt(e.target.value));
-  //   console.log(
-  //     "los pointsToPush que acabo de meter en el array",
-  //     pointsToPush
-  //   );
-
-  //   ///reduce
-  //   /*
-  //   let pointsTotal = pointsToPush.reduce(
-  //     (previousValue, currentValue) => previousValue + currentValue
-  //   );*/
-
-  //   const reducer = (previousValue, currentValue) =>
-  //     previousValue + currentValue;
-  //   console.log("pointsToPush", pointsToPush.reduce(reducer));
-  //   let a = pointsToPush.reduce(reducer);
-
-  //   setPoints(pointsToPush);
-  //   console.log("Pointsssssss", Points);
-  //   //const points = Points;
-  //   // console.log("MatrchesId", Matches[0][2]);
-  //   const playersScoring = Matches.find((match) => match[2] === id); // el [2] es la posicion en el array que es id, asi
-  //   console.log("playersScoring", playersScoring);
-  //   playersScoring[0][0].currentPoints = a;
-  //   playersScoring[0][1].currentPoints = a;
-  //   ///let array = e.target.vale
-  //   /// setPoints(...Point + array )
-  //   console.log("current points", playersScoring[0][0].currentPoints);
-  //   sortPlayers();
-  // };
-
   const matchResult = (e, id) => {
     if (e.target.value !== "") {
       let pointsToPush = Points.concat(parseInt(e.target.value));
@@ -108,13 +74,12 @@ export function Start(props) {
       const reducer = (previousValue, currentValue) =>
         previousValue + currentValue;
       console.log("pointsToPush", pointsToPush.reduce(reducer));
-      let a = pointsToPush.reduce(reducer);
+      //let a = pointsToPush.reduce(reducer);
 
-      setPoints(pointsToPush);
-      console.log("Pointsssssss", Points);
-      //const points = Points;
-      // console.log("MatrchesId", Matches[0][2]);
-      const playersScoring = Matches.find((match) => match[2] === id); // el [2] es la posicion en el array que es id, asi
+      //  setPoints(pointsToPush);
+      //console.log("Pointsssssss", Points);
+
+      const playersScoring = Matches.find((match) => match[2] === id);
       console.log("playersScoring", playersScoring);
 
       playersScoring[0][0].currentPoints =
@@ -126,8 +91,6 @@ export function Start(props) {
       playersScoring[0][1].displayPoints =
         playersScoring[0][1].currentPoints.reduce(reducer);
       console.log("DisplayPoint", playersScoring[0][0].displayPoints);
-      ///let array = e.target.vale
-      /// setPoints(...Point + array )
       console.log("current points", playersScoring[0][0].currentPoints);
       sortPlayers();
     }
@@ -155,9 +118,8 @@ export function Start(props) {
 
       setPoints(pointsToPush);
       console.log("Pointsssssss", Points);
-      //const points = Points;
-      // console.log("MatrchesId", Matches[0][2]);
-      const playersScoring = Matches.find((match) => match[2] === id); // el [2] es la posicion en el array que es id, asi
+
+      const playersScoring = Matches.find((match) => match[2] === id);
       console.log("playersScoring", playersScoring);
 
       playersScoring[1][0].currentPoints =
@@ -169,8 +131,6 @@ export function Start(props) {
       playersScoring[1][1].displayPoints =
         playersScoring[1][1].currentPoints.reduce(reducer);
       console.log("DisplayPoint", playersScoring[0][0].displayPoints);
-      ///let array = e.target.vale
-      /// setPoints(...Point + array )
       console.log("current points", playersScoring[0][0].currentPoints);
       sortPlayers();
     }
@@ -178,10 +138,8 @@ export function Start(props) {
 
   function generateMatch(players) {
     setEstado(2);
-
     let matches = [];
     let matchesTotal = [];
-
     //1-juntando jugador con jugador
     for (let i = 0; i < players.length; i++) {
       for (let j = 0; j < players.length; j++) {
@@ -193,7 +151,6 @@ export function Start(props) {
         matchesTotal.push([...matches]);
       }
     }
-
     //2-despues eliminar los que coincindan
     matches = [];
 
@@ -209,8 +166,6 @@ export function Start(props) {
         if (i === j) {
           continue;
         }
-        // element1 = matchesTotal2[i][0];
-        // element2 = matchesTotal2[i][1];
 
         if (
           element1 === matchesTotal2[j][1] &&
@@ -279,9 +234,6 @@ export function Start(props) {
     for (let i = 0; i < matchesTotal6.length; i++) {
       matchesTotalFinal[i] = [...matchesTotal6[i], i];
     }
-    // setMatches(matchesTotalFinal);
-    ///////////////////////////////////////////////////
-    let matchesTotal7 = [...matchesTotal6];
 
     //6- intento de alterar el orden del array
 
@@ -408,13 +360,10 @@ export function Start(props) {
                   <input
                     type="text"
                     onBlur={(e) => matchResult(e, match[2])}
-                    // onChange={(event) => setNumberOfPlayers(event.target.value)}
                   />{" "}
                   <input
                     type="text"
-                    // onChange={(e) => matchResult2(e, match[2])}
                     onBlur={(e) => matchResult2(e, match[2])}
-                    // onChange={(event) => setNumberOfPlayers(event.target.value)}
                   />{" "}
                 </div>
               </div>
