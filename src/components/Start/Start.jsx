@@ -9,6 +9,7 @@ import { NumberOfPlayersInput } from "../NumberOfPLayers/NumberOfPLayers";
 import { NameSkills } from "../NamesSkills/NamesSkills";
 
 export function Start(props) {
+  const [result, setResult] = useState();
   const [sensibility, setSensibility] = useState("0");
   const [numberOfPlayers, setNumberOfPlayers] = useState("0");
   const [players, setPlayers] = useState([]);
@@ -16,6 +17,20 @@ export function Start(props) {
   let matchesTotal6;
   const [Matches, setMatches] = useState([]);
   const [Points, setPoints] = useState([]);
+
+  // let newVersionMatch = {
+  //   teams: [
+  //     {
+  //       members: [playerid1, playerid2],
+  //       puntos: "",
+  //     },
+  //     {
+  //       members: [playerid3, playerid4],
+  //       puntos: "",
+  //     },
+  //   ],
+  //   id: "",
+  // };
 
   let playersSorted = [];
 
@@ -29,8 +44,8 @@ export function Start(props) {
         name: "",
         id: i,
         skills: 0,
-        currentPoints: [0],
-        displayPoints: 0,
+        // currentPoints: [],
+        // displayPoints: 0,
       };
       newPlayers.push(newPlayer);
     }
@@ -67,31 +82,32 @@ export function Start(props) {
   const matchResult = (e, id) => {
     if (e.target.value !== "") {
       let pointsToPush = Points.concat(parseInt(e.target.value));
-      console.log(
-        "los pointsToPush que acabo de meter en el array",
-        pointsToPush
-      );
+
       const reducer = (previousValue, currentValue) =>
         previousValue + currentValue;
-      console.log("pointsToPush", pointsToPush.reduce(reducer));
-      //let a = pointsToPush.reduce(reducer);
 
-      //  setPoints(pointsToPush);
-      //console.log("Pointsssssss", Points);
-
-      const playersScoring = Matches.find((match) => match[2] === id);
+      const playersScoring = Matches.find((match) => match[2] === id); ///match[2] es el id, match[0] y match[1] son las parejas
       console.log("playersScoring", playersScoring);
+      console.log("Matches yeah", Matches);
 
-      playersScoring[0][0].currentPoints =
-        playersScoring[0][0].currentPoints.concat(parseInt(e.target.value));
-      playersScoring[0][0].displayPoints =
-        playersScoring[0][0].currentPoints.reduce(reducer);
-      playersScoring[0][1].currentPoints =
-        playersScoring[0][1].currentPoints.concat(parseInt(e.target.value));
-      playersScoring[0][1].displayPoints =
-        playersScoring[0][1].currentPoints.reduce(reducer);
-      console.log("DisplayPoint", playersScoring[0][0].displayPoints);
-      console.log("current points", playersScoring[0][0].currentPoints);
+      let matchesTemporal = [...Matches];
+
+      const coinciden = (element) => element[2] === id;
+      let index = matchesTemporal.findIndex(coinciden);
+      console.log("index", index);
+      console.log(
+        "matchesTemporal[index]",
+        matchesTemporal[index][0][0].currentPoints
+      );
+
+      matchesTemporal[index][0][0].currentPoints.push(parseInt(e.target.value));
+      matchesTemporal[index][0][1].currentPoints.push(parseInt(e.target.value));
+      console.log(
+        "matchesTemporal[index]11111",
+        matchesTemporal[index][0][0].currentPoints
+      );
+
+      setMatches(matchesTemporal);
       sortPlayers();
     }
   };
@@ -138,8 +154,7 @@ export function Start(props) {
 
   function generateMatch(players) {
     setEstado(2);
-    let matches = [];
-    let matchesTotal = [];
+    const teams = [];
     //1-juntando jugador con jugador
     for (let i = 0; i < players.length; i++) {
       for (let j = 0; j < players.length; j++) {
@@ -147,119 +162,136 @@ export function Start(props) {
           continue;
         }
 
-        matches = [players[j], players[i]];
-        matchesTotal.push([...matches]);
+        const team = [players[j], players[i]];
+        teams.push(team);
       }
     }
-    //2-despues eliminar los que coincindan
-    matches = [];
+    ////2-despues eliminar los que coincindan
 
-    let element1;
-    let element2;
-    let matchesTotal2 = [...matchesTotal];
+    for (let i = 0; i < teams.length; i++) {
+      const player1 = teams[i][0];
+      const player2 = teams[i][1];
 
-    for (let i = 0; i < matchesTotal2.length; i++) {
-      element1 = matchesTotal2[i][0];
-      element2 = matchesTotal2[i][1];
-
-      for (let j = 0; j < matchesTotal2.length; j++) {
+      ///mirar si es necesario o lo puedo quitar/////////////////////////////////////////////////////////////////////
+      for (let j = 0; j < teams.length; j++) {
         if (i === j) {
           continue;
         }
 
-        if (
-          element1 === matchesTotal2[j][1] &&
-          element2 === matchesTotal2[j][0]
-        ) {
+        if (player1 === teams[j][1] && player2 === teams[j][0]) {
           if (i < j) {
-            matchesTotal2.splice(j, 1);
+            teams.splice(j, 1);
           }
           break;
         }
       }
     }
-    // 3-matches de 2 vs 2 con repetidos
-    let matchesTotal3 = [...matchesTotal2];
-    let matchesTotal4 = [];
 
-    for (let i = 0; i < matchesTotal3.length; i++) {
-      for (let j = 0; j < matchesTotal3.length; j++) {
+    //   // 3-matches de 2 vs 2 con repetidos
+    /////refactorizar de manera que en este paso no meta los partidos que sean iguales////////////////////////
+    const matches = [];
+
+    for (let i = 0; i < teams.length; i++) {
+      for (let j = 0; j < teams.length; j++) {
         if (i === j) {
           continue;
         }
-        matches = [matchesTotal3[j], matchesTotal3[i]];
-        matchesTotal4.push([...matches]);
-      }
-    }
-    // 4-matches de 2 vs 2 sin repetidos
-    let matchesTotal5 = [...matchesTotal4];
-    for (let i = 0; i < matchesTotal5.length; i++) {
-      element1 = matchesTotal5[i][0];
-      element2 = matchesTotal5[i][1];
-      let a;
-      for (let j = 0; j < matchesTotal5.length; j++) {
-        if (i === j) {
-          continue;
-        }
-        element1 = matchesTotal5[i][0];
-        element2 = matchesTotal5[i][1];
-
-        if (
-          element1 === matchesTotal5[j][1] &&
-          element2 === matchesTotal5[j][0]
-        ) {
-          if (i < j) {
-            matchesTotal5.splice(j, 1);
-          }
-          break;
-        }
-      }
-    }
-    //5-eliminar los partidos en los que un jugador este en dos equipos al mismo tiempo
-    matchesTotal6 = [...matchesTotal5];
-    for (let i = 0; i < matchesTotal6.length; i++) {
-      if (
-        matchesTotal6[i][0][0] === matchesTotal6[i][1][0] ||
-        matchesTotal6[i][0][0] === matchesTotal6[i][1][1] ||
-        matchesTotal6[i][0][1] === matchesTotal6[i][1][0] ||
-        matchesTotal6[i][0][1] === matchesTotal6[i][1][1]
-      ) {
-        matchesTotal6.splice(i, 1);
-        i = i - 1;
+        const matchTeams = [
+          { members: teams[j], points: 0 },
+          { members: teams[i], points: 0 },
+        ];
+        matches.push({
+          teams: matchTeams,
+          id: `${i}${j}`,
+        });
       }
     }
 
-    ///7-
-    let matchesTotalFinal = [];
-    for (let i = 0; i < matchesTotal6.length; i++) {
-      matchesTotalFinal[i] = [...matchesTotal6[i], i];
-    }
+    ///repasar todo el codigo hecho hoy, quiatar los componenetes que no uso
+    //console.log("equipos", matches);
+    // let newVersionMatch = {
+    //   teams: [
+    //     {
+    //       members: [playerid1, playerid2],
+    //       puntos: "",
+    //     },
+    //     {
+    //       members: [playerid3, playerid4],
+    //       puntos: "",
+    //     },
+    //   ],
+    //   id: "",
+    // };
 
-    //6- intento de alterar el orden del array
+    //   // 4-matches de 2 vs 2 sin repetidos
+    //   let matchesTotal5 = [...matchesTotal4];
+    //   for (let i = 0; i < matchesTotal5.length; i++) {
+    //     element1 = matchesTotal5[i][0];
+    //     element2 = matchesTotal5[i][1];
+    //     let a;
+    //     for (let j = 0; j < matchesTotal5.length; j++) {
+    //       if (i === j) {
+    //         continue;
+    //       }
+    //       element1 = matchesTotal5[i][0];
+    //       element2 = matchesTotal5[i][1];
 
-    for (let i = matchesTotalFinal.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [matchesTotalFinal[i], matchesTotalFinal[j]] = [
-        matchesTotalFinal[j],
-        matchesTotalFinal[i],
-      ];
-    }
-    setMatches(matchesTotalFinal);
-    let BalancedMatch;
-    BalancedMatch = matchesTotalFinal.filter((elm) => {
-      if (
-        Math.abs(
-          elm[0][0].skills +
-            elm[0][1].skills -
-            (elm[1][0].skills + elm[1][1].skills)
-        ) <= sensibility
-      ) {
-        console.log("elm", elm);
-        return true;
-      }
-    });
-    console.log("BalancedMatch", BalancedMatch);
-    setMatches(BalancedMatch);
+    //       if (
+    //         element1 === matchesTotal5[j][1] &&
+    //         element2 === matchesTotal5[j][0]
+    //       ) {
+    //         if (i < j) {
+    //           matchesTotal5.splice(j, 1);
+    //         }
+    //         break;
+    //       }
+    //     }
+    //   }
+    //   //5-eliminar los partidos en los que un jugador este en dos equipos al mismo tiempo
+    //   matchesTotal6 = [...matchesTotal5];
+    //   for (let i = 0; i < matchesTotal6.length; i++) {
+    //     if (
+    //       matchesTotal6[i][0][0] === matchesTotal6[i][1][0] ||
+    //       matchesTotal6[i][0][0] === matchesTotal6[i][1][1] ||
+    //       matchesTotal6[i][0][1] === matchesTotal6[i][1][0] ||
+    //       matchesTotal6[i][0][1] === matchesTotal6[i][1][1]
+    //     ) {
+    //       matchesTotal6.splice(i, 1);
+    //       i = i - 1;
+    //     }
+    //   }
+
+    //   ///7- añadiendo id
+    //   let matchesTotalFinal = [];
+    //   for (let i = 0; i < matchesTotal6.length; i++) {
+    //     matchesTotalFinal[i] = [...matchesTotal6[i], i];
+    //   }
+
+    //   //6- intento de alterar el orden del array
+
+    //   for (let i = matchesTotalFinal.length - 1; i > 0; i--) {
+    //     const j = Math.floor(Math.random() * (i + 1));
+    //     [matchesTotalFinal[i], matchesTotalFinal[j]] = [
+    //       matchesTotalFinal[j],
+    //       matchesTotalFinal[i],
+    //     ];
+    //   }
+    //   // setMatches(matchesTotalFinal);
+    //   let BalancedMatch;
+    //   BalancedMatch = matchesTotalFinal.filter((elm) => {
+    //     if (
+    //       Math.abs(
+    //         elm[0][0].skills +
+    //           elm[0][1].skills -
+    //           (elm[1][0].skills + elm[1][1].skills)
+    //       ) <= sensibility
+    //     ) {
+    //       return true;
+    //     }
+    //   });
+
+    //   setMatches(BalancedMatch);
+    //   console.log("BalancedMatch....", BalancedMatch);
   }
   const sliderChange = (e) => {
     setSensibility(e.target.value);
@@ -359,11 +391,11 @@ export function Start(props) {
                   {" "}
                   <input
                     type="text"
-                    onBlur={(e) => matchResult(e, match[2])}
+                    onChange={(e) => matchResult(e, match[2])}
                   />{" "}
                   <input
                     type="text"
-                    onBlur={(e) => matchResult2(e, match[2])}
+                    onChange={(e) => matchResult2(e, match[2])}
                   />{" "}
                 </div>
               </div>
