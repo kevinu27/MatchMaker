@@ -189,6 +189,7 @@ export function Start(props) {
 
     //   // 3-matches de 2 vs 2 con repetidos
     /////refactorizar de manera que en este paso no meta los partidos que sean iguales////////////////////////
+
     const matches = [];
 
     for (let i = 0; i < teams.length; i++) {
@@ -206,92 +207,68 @@ export function Start(props) {
         });
       }
     }
+    // console.log(
+    //   "matches[0].teams[0].members[0]",
+    //   matches[0].teams[0].members[0]
+    // );
+    // console.log("matches[0].teams[0]", matches[0].teams[0]);
+    // console.log("matches[0].teams[1]", matches[0].teams[1]);
+    // console.log("matches[0]", matches[0]);
+    console.log("matches.....", matches);
 
-    ///repasar todo el codigo hecho hoy, quiatar los componenetes que no uso
-    //console.log("equipos", matches);
-    // let newVersionMatch = {
-    //   teams: [
-    //     {
-    //       members: [playerid1, playerid2],
-    //       puntos: "",
-    //     },
-    //     {
-    //       members: [playerid3, playerid4],
-    //       puntos: "",
-    //     },
-    //   ],
-    //   id: "",
-    // };
+    // 4-matches de 2 vs 2 sin jugadores jugando en dos equipos a la vez
 
-    //   // 4-matches de 2 vs 2 sin repetidos
-    //   let matchesTotal5 = [...matchesTotal4];
-    //   for (let i = 0; i < matchesTotal5.length; i++) {
-    //     element1 = matchesTotal5[i][0];
-    //     element2 = matchesTotal5[i][1];
-    //     let a;
-    //     for (let j = 0; j < matchesTotal5.length; j++) {
-    //       if (i === j) {
-    //         continue;
-    //       }
-    //       element1 = matchesTotal5[i][0];
-    //       element2 = matchesTotal5[i][1];
+    for (let i = 0; i < matches.length; i++) {
+      //   for (let j = 0; j < matches.length; j++) {
+      const element1 = matches[i].teams[0].members[0];
+      const element2 = matches[i].teams[0].members[1];
 
-    //       if (
-    //         element1 === matchesTotal5[j][1] &&
-    //         element2 === matchesTotal5[j][0]
-    //       ) {
-    //         if (i < j) {
-    //           matchesTotal5.splice(j, 1);
-    //         }
-    //         break;
-    //       }
-    //     }
-    //   }
-    //   //5-eliminar los partidos en los que un jugador este en dos equipos al mismo tiempo
-    //   matchesTotal6 = [...matchesTotal5];
-    //   for (let i = 0; i < matchesTotal6.length; i++) {
-    //     if (
-    //       matchesTotal6[i][0][0] === matchesTotal6[i][1][0] ||
-    //       matchesTotal6[i][0][0] === matchesTotal6[i][1][1] ||
-    //       matchesTotal6[i][0][1] === matchesTotal6[i][1][0] ||
-    //       matchesTotal6[i][0][1] === matchesTotal6[i][1][1]
-    //     ) {
-    //       matchesTotal6.splice(i, 1);
-    //       i = i - 1;
-    //     }
-    //   }
+      if (
+        element1 === matches[i].teams[1].members[1] ||
+        element1 === matches[i].teams[1].members[0] ||
+        element2 === matches[i].teams[1].members[0] ||
+        element2 === matches[i].teams[1].members[1]
+      ) {
+        //if (i < j) {
+        matches.splice(i, 1);
+        i = i - 1;
+        //  break;
+        //}
+      }
+      // }
+    }
+    console.log("matches.....!!!!", matches);
+    console.log("matches.length antes", matches.length);
+    // setMatches(matches);
+    ///////////////////////////////////////////////////////////////
 
-    //   ///7- añadiendo id
-    //   let matchesTotalFinal = [];
-    //   for (let i = 0; i < matchesTotal6.length; i++) {
-    //     matchesTotalFinal[i] = [...matchesTotal6[i], i];
-    //   }
+    for (let i = 0; i < matches.length; i++) {
+      const player1 = matches[i].teams[0].members[0].name;
+      const player2 = matches[i].teams[0].members[1].name;
 
-    //   //6- intento de alterar el orden del array
+      for (let j = 0; j < matches.length; j++) {
+        if (i === j) {
+          continue;
+        }
 
-    //   for (let i = matchesTotalFinal.length - 1; i > 0; i--) {
-    //     const j = Math.floor(Math.random() * (i + 1));
-    //     [matchesTotalFinal[i], matchesTotalFinal[j]] = [
-    //       matchesTotalFinal[j],
-    //       matchesTotalFinal[i],
-    //     ];
-    //   }
-    //   // setMatches(matchesTotalFinal);
-    //   let BalancedMatch;
-    //   BalancedMatch = matchesTotalFinal.filter((elm) => {
-    //     if (
-    //       Math.abs(
-    //         elm[0][0].skills +
-    //           elm[0][1].skills -
-    //           (elm[1][0].skills + elm[1][1].skills)
-    //       ) <= sensibility
-    //     ) {
-    //       return true;
-    //     }
-    //   });
+        if (
+          player1 === matches[j].teams[1].members[0].name &&
+          player2 === matches[j].teams[1].members[1].name
+        ) {
+          console.log("dentro");
+          matches.splice(j, 1);
+          j = j - 1;
+          break;
+        }
+      }
+      console.log("!!!!!!!!!!!!!!", matches[i].teams[0]);
+    }
+    // //////////////////////////////
 
-    //   setMatches(BalancedMatch);
-    //   console.log("BalancedMatch....", BalancedMatch);
+    // console.log("matches.length", matches.length);
+    // console.log("matches despues", matches);
+    console.log("matches.length antes....", matches.length);
+    setMatches(matches);
   }
   const sliderChange = (e) => {
     setSensibility(e.target.value);
@@ -376,15 +353,15 @@ export function Start(props) {
                 {console.log("Match", match)}
 
                 <div className="playersTeam">
-                  <p className="player">{match[0][0].name}</p>{" "}
-                  <p className="player">{match[0][1].name}</p>
+                  <p className="player">{match.teams[0].members[0].name}</p>{" "}
+                  <p className="player">{match.teams[0].members[1].name}</p>
                 </div>
                 <div className="versus">
                   <p> VS </p>
                 </div>
                 <div className="playersTeam">
-                  <p className="player">{match[1][0].name}</p>{" "}
-                  <p className="player">{match[1][1].name}</p>
+                  <p className="player">{match.teams[1].members[0].name}</p>{" "}
+                  <p className="player">{match.teams[1].members[1].name}</p>
                 </div>
 
                 <div className="inputResultDiv">
