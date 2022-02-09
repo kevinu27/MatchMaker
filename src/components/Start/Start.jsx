@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import { Header } from "../Header/Header";
 import { NumberOfPlayersInput } from "../NumberOfPLayers/NumberOfPLayers";
 import { NameSkills } from "../NamesSkills/NamesSkills";
+import { matches } from "dom-helpers";
 
 export function Start(props) {
   const [result, setResult] = useState();
@@ -15,22 +16,8 @@ export function Start(props) {
   const [players, setPlayers] = useState([]);
   const [estado, setEstado] = useState(0);
   let matchesTotal6;
-  const [Matches, setMatches] = useState([]);
+  const [matchesState, setMatches] = useState([]);
   const [Points, setPoints] = useState([]);
-
-  // let newVersionMatch = {
-  //   teams: [
-  //     {
-  //       members: [playerid1, playerid2],
-  //       puntos: "",
-  //     },
-  //     {
-  //       members: [playerid3, playerid4],
-  //       puntos: "",
-  //     },
-  //   ],
-  //   id: "",
-  // };
 
   let playersSorted = [];
 
@@ -44,6 +31,7 @@ export function Start(props) {
         name: "",
         id: i,
         skills: 0,
+        points: 0,
         // currentPoints: [],
         // displayPoints: 0,
       };
@@ -68,11 +56,11 @@ export function Start(props) {
 
   function back() {
     setEstado(estado - 1);
-    console.log("back");
+    // console.log("back");
   }
   function inicio() {
     setEstado(0);
-    console.log("inicio");
+    //  console.log("inicio");
   }
 
   function getNumberOfPlayers(event) {
@@ -81,41 +69,21 @@ export function Start(props) {
 
   const matchResult = (e, id) => {
     if (e.target.value !== "") {
-      let pointsToPush = Points.concat(parseInt(e.target.value));
+      const matchesCopy = [...matchesState];
+      const pointsToPush = parseInt(e.target.value);
+      const playersScoring = matchesCopy.find((match) => match.id === id);
+      playersScoring.teams[0].points = pointsToPush;
+      // console.log("Matches.......||||||------.....", matchesCopy);
+      // console.log("pointsToPush.......||||||------.....", pointsToPush);
 
-      const reducer = (previousValue, currentValue) =>
-        previousValue + currentValue;
-
-      const playersScoring = Matches.find((match) => match[2] === id); ///match[2] es el id, match[0] y match[1] son las parejas
-      console.log("playersScoring", playersScoring);
-      console.log("Matches yeah", Matches);
-
-      let matchesTemporal = [...Matches];
-
-      const coinciden = (element) => element[2] === id;
-      let index = matchesTemporal.findIndex(coinciden);
-      console.log("index", index);
-      console.log(
-        "matchesTemporal[index]",
-        matchesTemporal[index][0][0].currentPoints
-      );
-
-      matchesTemporal[index][0][0].currentPoints.push(parseInt(e.target.value));
-      matchesTemporal[index][0][1].currentPoints.push(parseInt(e.target.value));
-      console.log(
-        "matchesTemporal[index]11111",
-        matchesTemporal[index][0][0].currentPoints
-      );
-
-      setMatches(matchesTemporal);
-      sortPlayers();
+      setMatches(matchesCopy);
     }
   };
 
   const sortPlayers = () => {
-    console.log(players);
+    // console.log(players);
     const sorted = [...players].sort((a, b) => {
-      return b.displayPoints - a.displayPoints;
+      return b.points - a.points;
     });
     setPlayers(sorted);
   };
@@ -123,20 +91,20 @@ export function Start(props) {
   const matchResult2 = (e, id) => {
     if (e.target.value !== "") {
       let pointsToPush = Points.concat(parseInt(e.target.value));
-      console.log(
-        "los pointsToPush que acabo de meter en el array",
-        pointsToPush
-      );
+      // console.log(
+      //   "los pointsToPush que acabo de meter en el array",
+      //   pointsToPush
+      // );
       const reducer = (previousValue, currentValue) =>
         previousValue + currentValue;
-      console.log("pointsToPush", pointsToPush.reduce(reducer));
+      // console.log("pointsToPush", pointsToPush.reduce(reducer));
       let a = pointsToPush.reduce(reducer);
 
       setPoints(pointsToPush);
-      console.log("Pointsssssss", Points);
+      // console.log("Pointsssssss", Points);
 
-      const playersScoring = Matches.find((match) => match[2] === id);
-      console.log("playersScoring", playersScoring);
+      const playersScoring = matchesState.find((match) => match[2] === id);
+      // console.log("playersScoring", playersScoring);
 
       playersScoring[1][0].currentPoints =
         playersScoring[1][0].currentPoints.concat(parseInt(e.target.value));
@@ -146,8 +114,8 @@ export function Start(props) {
         playersScoring[1][1].currentPoints.concat(parseInt(e.target.value));
       playersScoring[1][1].displayPoints =
         playersScoring[1][1].currentPoints.reduce(reducer);
-      console.log("DisplayPoint", playersScoring[0][0].displayPoints);
-      console.log("current points", playersScoring[0][0].currentPoints);
+      // console.log("DisplayPoint", playersScoring[0][0].displayPoints);
+      // console.log("current points", playersScoring[0][0].currentPoints);
       sortPlayers();
     }
   };
@@ -207,14 +175,8 @@ export function Start(props) {
         });
       }
     }
-    // console.log(
-    //   "matches[0].teams[0].members[0]",
-    //   matches[0].teams[0].members[0]
-    // );
-    // console.log("matches[0].teams[0]", matches[0].teams[0]);
-    // console.log("matches[0].teams[1]", matches[0].teams[1]);
-    // console.log("matches[0]", matches[0]);
-    console.log("matches.....", matches);
+
+    // console.log("matches.....", matches);
 
     // 4-matches de 2 vs 2 sin jugadores jugando en dos equipos a la vez
 
@@ -229,17 +191,13 @@ export function Start(props) {
         element2 === matches[i].teams[1].members[0] ||
         element2 === matches[i].teams[1].members[1]
       ) {
-        //if (i < j) {
         matches.splice(i, 1);
         i = i - 1;
-        //  break;
-        //}
       }
-      // }
     }
-    console.log("matches.....!!!!", matches);
-    console.log("matches.length antes", matches.length);
-    // setMatches(matches);
+    // console.log("matches.....!!!!", matches);
+    // console.log("matches.length antes", matches.length);
+
     ///////////////////////////////////////////////////////////////
 
     for (let i = 0; i < matches.length; i++) {
@@ -255,19 +213,15 @@ export function Start(props) {
           player1 === matches[j].teams[1].members[0].name &&
           player2 === matches[j].teams[1].members[1].name
         ) {
-          console.log("dentro");
+          // console.log("dentro");
           matches.splice(j, 1);
           j = j - 1;
           break;
         }
       }
-      console.log("!!!!!!!!!!!!!!", matches[i].teams[0]);
     }
     // //////////////////////////////
 
-    // console.log("matches.length", matches.length);
-    // console.log("matches despues", matches);
-    console.log("matches.length antes....", matches.length);
     setMatches(matches);
   }
   const sliderChange = (e) => {
@@ -348,10 +302,8 @@ export function Start(props) {
 
         {estado === 2 ? (
           <div className="matchesDiv">
-            {Matches.map((match) => (
+            {matchesState.map((match) => (
               <div className="MatchRow">
-                {console.log("Match", match)}
-
                 <div className="playersTeam">
                   <p className="player">{match.teams[0].members[0].name}</p>{" "}
                   <p className="player">{match.teams[0].members[1].name}</p>
@@ -368,7 +320,7 @@ export function Start(props) {
                   {" "}
                   <input
                     type="text"
-                    onChange={(e) => matchResult(e, match[2])}
+                    onChange={(e) => matchResult(e, match.id)}
                   />{" "}
                   <input
                     type="text"
@@ -391,16 +343,36 @@ export function Start(props) {
             </div>
 
             <div className="MatchRow2">
-              {players.map((player) => (
-                <div className="playerRanking">
-                  <div className="playerRankingDiv">
-                    <p className="player">{player.name}</p>{" "}
+              {/* //el map que se haga sobre el sorted
+              
+              const sortPlayers = () => {
+    // console.log(players);
+    const sorted = [...players].sort((a, b) => {
+      return b.points - a.points;
+    });
+    setPlayers(sorted);
+  };
+              */}
+              {[...players]
+                .sort((a, b) => {
+                  return b.points - a.points;
+                })
+                .map((player) => (
+                  <div className="playerRanking">
+                    <div className="playerRankingDiv">
+                      <p className="player">{player.name}</p>{" "}
+                    </div>
+                    <div className="playerRankingDiv">
+                      <p className="player">
+                        {newFunction(player.id)}
+                        {/* {console.log(
+                        "newFunction(player.id)",
+                        newFunction(player.id)
+                      )} */}
+                      </p>{" "}
+                    </div>
                   </div>
-                  <div className="playerRankingDiv">
-                    <p className="player">{player.displayPoints}</p>{" "}
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         ) : (
@@ -409,4 +381,32 @@ export function Start(props) {
       </div>
     </>
   );
+
+  function newFunction(id) {
+    // quiero filtrar los partidos donde participa un jugador
+    const teamsMappedFromMatches = matchesState
+      .map((match) => match.teams)
+      .flat(); ///con esto se quitar un array de la jerarquia
+
+    const pointList = teamsMappedFromMatches
+      .filter((team) => team.members.some((member) => member.id === id))
+      .map((team) => team.points);
+    const reducer = (previousValue, currentValue) =>
+      previousValue + currentValue;
+    const pointReduced = pointList.reduce(reducer);
+
+    const playersCopy = [...players];
+    ///  Por que coño con players.forEach((player) => { o con playersCopy.forEach((player) => {  me actualiza el estado????????????
+    players.forEach((player) => {
+      if (player.id === id) {
+        player.points = pointReduced;
+      }
+    });
+
+    console.log("playersCopy", playersCopy);
+    console.log("playerState", players);
+    console.log("--------------");
+
+    return pointReduced;
+  }
 }
