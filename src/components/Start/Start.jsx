@@ -73,9 +73,6 @@ export function Start(props) {
       const pointsToPush = parseInt(e.target.value);
       const playersScoring = matchesCopy.find((match) => match.id === id);
       playersScoring.teams[0].points = pointsToPush;
-      // console.log("Matches.......||||||------.....", matchesCopy);
-      // console.log("pointsToPush.......||||||------.....", pointsToPush);
-
       setMatches(matchesCopy);
     }
   };
@@ -90,33 +87,11 @@ export function Start(props) {
 
   const matchResult2 = (e, id) => {
     if (e.target.value !== "") {
-      let pointsToPush = Points.concat(parseInt(e.target.value));
-      // console.log(
-      //   "los pointsToPush que acabo de meter en el array",
-      //   pointsToPush
-      // );
-      const reducer = (previousValue, currentValue) =>
-        previousValue + currentValue;
-      // console.log("pointsToPush", pointsToPush.reduce(reducer));
-      let a = pointsToPush.reduce(reducer);
-
-      setPoints(pointsToPush);
-      // console.log("Pointsssssss", Points);
-
-      const playersScoring = matchesState.find((match) => match[2] === id);
-      // console.log("playersScoring", playersScoring);
-
-      playersScoring[1][0].currentPoints =
-        playersScoring[1][0].currentPoints.concat(parseInt(e.target.value));
-      playersScoring[1][0].displayPoints =
-        playersScoring[1][0].currentPoints.reduce(reducer);
-      playersScoring[1][1].currentPoints =
-        playersScoring[1][1].currentPoints.concat(parseInt(e.target.value));
-      playersScoring[1][1].displayPoints =
-        playersScoring[1][1].currentPoints.reduce(reducer);
-      // console.log("DisplayPoint", playersScoring[0][0].displayPoints);
-      // console.log("current points", playersScoring[0][0].currentPoints);
-      sortPlayers();
+      const matchesCopy = [...matchesState];
+      const pointsToPush = parseInt(e.target.value);
+      const playersScoring = matchesCopy.find((match) => match.id === id);
+      playersScoring.teams[1].points = pointsToPush;
+      setMatches(matchesCopy);
     }
   };
 
@@ -324,7 +299,7 @@ export function Start(props) {
                   />{" "}
                   <input
                     type="text"
-                    onChange={(e) => matchResult2(e, match[2])}
+                    onChange={(e) => matchResult2(e, match.id)}
                   />{" "}
                 </div>
               </div>
@@ -343,16 +318,6 @@ export function Start(props) {
             </div>
 
             <div className="MatchRow2">
-              {/* //el map que se haga sobre el sorted
-              
-              const sortPlayers = () => {
-    // console.log(players);
-    const sorted = [...players].sort((a, b) => {
-      return b.points - a.points;
-    });
-    setPlayers(sorted);
-  };
-              */}
               {[...players]
                 .sort((a, b) => {
                   return b.points - a.points;
