@@ -1,25 +1,17 @@
 import "./Start.css";
 import "bootstrap/dist/css/bootstrap.css";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import ReactDOM from "react-dom";
 import React, { useState } from "react";
 import { Header } from "../Header/Header";
 import { NumberOfPlayersInput } from "../NumberOfPLayers/NumberOfPLayers";
 import { NameSkills } from "../NamesSkills/NamesSkills";
-import { matches } from "dom-helpers";
+import { Matches } from "../Matches/Matches";
 
 export function Start(props) {
-  const [result, setResult] = useState();
   const [sensibility, setSensibility] = useState("0");
   const [numberOfPlayers, setNumberOfPlayers] = useState("0");
   const [players, setPlayers] = useState([]);
   const [estado, setEstado] = useState(0);
-  let matchesTotal6;
   const [matchesState, setMatches] = useState([]);
-  const [Points, setPoints] = useState([]);
-
-  let playersSorted = [];
 
   const funcionDeClick = (e) => {
     e.preventDefault();
@@ -32,20 +24,11 @@ export function Start(props) {
         id: i,
         skills: 0,
         points: 0,
-        // currentPoints: [],
-        // displayPoints: 0,
       };
       newPlayers.push(newPlayer);
     }
     setPlayers(newPlayers);
     setEstado(1);
-  };
-
-  const changePlayerName = (playerId, playerName) => {
-    const playersCopy = [...players];
-    const playerToChange = playersCopy.find((player) => player.id === playerId);
-    playerToChange.name = playerName;
-    setPlayers(playersCopy);
   };
   const changePlayerSkills = (playerId, playerSkills) => {
     const playersCopy = [...players];
@@ -56,11 +39,9 @@ export function Start(props) {
 
   function back() {
     setEstado(estado - 1);
-    // console.log("back");
   }
   function inicio() {
     setEstado(0);
-    //  console.log("inicio");
   }
 
   function getNumberOfPlayers(event) {
@@ -78,7 +59,6 @@ export function Start(props) {
   };
 
   const sortPlayers = () => {
-    // console.log(players);
     const sorted = [...players].sort((a, b) => {
       return b.points - a.points;
     });
@@ -104,23 +84,19 @@ export function Start(props) {
         if (i === j) {
           continue;
         }
-
         const team = [players[j], players[i]];
         teams.push(team);
       }
     }
     ////2-despues eliminar los que coincindan
-
     for (let i = 0; i < teams.length; i++) {
       const player1 = teams[i][0];
       const player2 = teams[i][1];
-
       ///mirar si es necesario o lo puedo quitar/////////////////////////////////////////////////////////////////////
       for (let j = 0; j < teams.length; j++) {
         if (i === j) {
           continue;
         }
-
         if (player1 === teams[j][1] && player2 === teams[j][0]) {
           if (i < j) {
             teams.splice(j, 1);
@@ -129,12 +105,9 @@ export function Start(props) {
         }
       }
     }
-
     //   // 3-matches de 2 vs 2 con repetidos
     /////refactorizar de manera que en este paso no meta los partidos que sean iguales////////////////////////
-
     const matches = [];
-
     for (let i = 0; i < teams.length; i++) {
       for (let j = 0; j < teams.length; j++) {
         if (i === j) {
@@ -150,13 +123,8 @@ export function Start(props) {
         });
       }
     }
-
-    // console.log("matches.....", matches);
-
     // 4-matches de 2 vs 2 sin jugadores jugando en dos equipos a la vez
-
     for (let i = 0; i < matches.length; i++) {
-      //   for (let j = 0; j < matches.length; j++) {
       const element1 = matches[i].teams[0].members[0];
       const element2 = matches[i].teams[0].members[1];
 
@@ -170,44 +138,60 @@ export function Start(props) {
         i = i - 1;
       }
     }
-    // console.log("matches.....!!!!", matches);
-    // console.log("matches.length antes", matches.length);
-
     ///////////////////////////////////////////////////////////////
-
     for (let i = 0; i < matches.length; i++) {
       const player1 = matches[i].teams[0].members[0].name;
       const player2 = matches[i].teams[0].members[1].name;
-
       for (let j = 0; j < matches.length; j++) {
         if (i === j) {
           continue;
         }
-
         if (
           player1 === matches[j].teams[1].members[0].name &&
           player2 === matches[j].teams[1].members[1].name
         ) {
-          // console.log("dentro");
           matches.splice(j, 1);
           j = j - 1;
           break;
         }
       }
     }
-    // //////////////////////////////
-
     setMatches(matches);
   }
+
+  const setPlayerName = (playerId, playerName) => {
+    const playersCopy = [...players];
+    const playerToChange = playersCopy.find((player) => player.id === playerId);
+    playerToChange.name = playerName;
+    setPlayers(playersCopy);
+  };
+
   const sliderChange = (e) => {
     setSensibility(e.target.value);
   };
 
+  function totalEachPlayersPoints(id) {
+    // quiero filtrar los partidos donde participa un jugador
+    const teamsMappedFromMatches = matchesState
+      .map((match) => match.teams)
+      .flat(); ///con esto se quitar un array de la jerarquia
+    const pointList = teamsMappedFromMatches
+      .filter((team) => team.members.some((member) => member.id === id))
+      .map((team) => team.points);
+    const reducer = (previousValue, currentValue) =>
+      previousValue + currentValue;
+    const pointReduced = pointList.reduce(reducer);
+    players.forEach((player) => {
+      if (player.id === id) {
+        player.points = pointReduced;
+      }
+    });
+    return pointReduced;
+  }
   //////////////////////////////////////////////////////////////////////////////////////Return/////////////////////////////////////////////////////////////////////////////
   return (
     <>
       <Header back={back} inicio={inicio} />
-
       <div className="labelNPlayer">
         {estado === 0 ? <p> Number of players </p> : <div> </div>}
       </div>
@@ -224,52 +208,13 @@ export function Start(props) {
         )}
         {estado === 1 ? (
           <div className="ancho">
-            <div className="labelsDiv">
-              <div className="label"> Player Name </div>
-              <div className="label"> Player Skill Level</div>
-            </div>
-
-            <label for="customRange1" class="form-label">
-              Get rid of the weakest: {sensibility}
-            </label>
-            <input
-              className="slider"
-              type="range"
-              class="form-range"
-              id="customRange1"
-              min="0"
-              max="10"
-              steps="1"
-              value={sensibility}
-              onChange={sliderChange}
+            {" "}
+            <NameSkills
+              sensibility={0}
+              players={players}
+              setPlayerName={setPlayerName}
+              generateMatch={generateMatch}
             />
-
-            {players.map((player) => (
-              <div className="divInputs">
-                <input
-                  type="text"
-                  value={player.name}
-                  key={player.id}
-                  onChange={(e) => changePlayerName(player.id, e.target.value)}
-                />
-                <input
-                  type="text"
-                  value={player.skills}
-                  key={player.id}
-                  onChange={(e) =>
-                    changePlayerSkills(player.id, e.target.value)
-                  }
-                />
-              </div>
-            ))}
-
-            <Button
-              variant="btn btn-light generateButton"
-              type="submit"
-              onClick={(e) => generateMatch(players)}
-            >
-              Generate Matches
-            </Button>
           </div>
         ) : (
           <div> </div>
@@ -277,68 +222,14 @@ export function Start(props) {
 
         {estado === 2 ? (
           <div className="matchesDiv">
-            {matchesState.map((match) => (
-              <div className="MatchRow">
-                <div className="playersTeam">
-                  <p className="player">{match.teams[0].members[0].name}</p>{" "}
-                  <p className="player">{match.teams[0].members[1].name}</p>
-                </div>
-                <div className="versus">
-                  <p> VS </p>
-                </div>
-                <div className="playersTeam">
-                  <p className="player">{match.teams[1].members[0].name}</p>{" "}
-                  <p className="player">{match.teams[1].members[1].name}</p>
-                </div>
-
-                <div className="inputResultDiv">
-                  {" "}
-                  <input
-                    type="text"
-                    onChange={(e) => matchResult(e, match.id)}
-                  />{" "}
-                  <input
-                    type="text"
-                    onChange={(e) => matchResult2(e, match.id)}
-                  />{" "}
-                </div>
-              </div>
-            ))}
-
-            <Button
-              variant="btn btn-light submitMatchButton"
-              type="submit"
-              onClick={(e) => sortPlayers()}
-            >
-              Submit Result
-            </Button>
-            <div className="labelNPlayer mt-5">
-              {" "}
-              <p> Current Ranking</p>
-            </div>
-
-            <div className="MatchRow2">
-              {[...players]
-                .sort((a, b) => {
-                  return b.points - a.points;
-                })
-                .map((player) => (
-                  <div className="playerRanking">
-                    <div className="playerRankingDiv">
-                      <p className="player">{player.name}</p>{" "}
-                    </div>
-                    <div className="playerRankingDiv">
-                      <p className="player">
-                        {newFunction(player.id)}
-                        {/* {console.log(
-                        "newFunction(player.id)",
-                        newFunction(player.id)
-                      )} */}
-                      </p>{" "}
-                    </div>
-                  </div>
-                ))}
-            </div>
+            <Matches
+              matchesState={matchesState}
+              matchResult={matchResult}
+              matchResult2={matchResult2}
+              players={players}
+              sortPlayers={sortPlayers}
+              totalEachPlayersPoints={totalEachPlayersPoints}
+            />
           </div>
         ) : (
           <div> </div>
@@ -346,32 +237,4 @@ export function Start(props) {
       </div>
     </>
   );
-
-  function newFunction(id) {
-    // quiero filtrar los partidos donde participa un jugador
-    const teamsMappedFromMatches = matchesState
-      .map((match) => match.teams)
-      .flat(); ///con esto se quitar un array de la jerarquia
-
-    const pointList = teamsMappedFromMatches
-      .filter((team) => team.members.some((member) => member.id === id))
-      .map((team) => team.points);
-    const reducer = (previousValue, currentValue) =>
-      previousValue + currentValue;
-    const pointReduced = pointList.reduce(reducer);
-
-    const playersCopy = [...players];
-    ///  Por que coño con players.forEach((player) => { o con playersCopy.forEach((player) => {  me actualiza el estado????????????
-    players.forEach((player) => {
-      if (player.id === id) {
-        player.points = pointReduced;
-      }
-    });
-
-    console.log("playersCopy", playersCopy);
-    console.log("playerState", players);
-    console.log("--------------");
-
-    return pointReduced;
-  }
 }
