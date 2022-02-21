@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 
-export function NameSkills(props) {
+export function NameAndSkills(props) {
   const [sensibility, setSensibility] = useState("0");
 
   const sliderChange = (e) => {

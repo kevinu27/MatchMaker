@@ -1,12 +1,12 @@
-import "./Start.css";
+import "./Main.css";
 import "bootstrap/dist/css/bootstrap.css";
 import React, { useState } from "react";
 import { Header } from "../Header/Header";
 import { NumberOfPlayersInput } from "../NumberOfPLayers/NumberOfPLayers";
-import { NameSkills } from "../NamesSkills/NamesSkills";
+import { NameAndSkills } from "../NameAndSkills/NameAndSkills";
 import { Matches } from "../Matches/Matches";
 
-export function Start(props) {
+export function Main(props) {
   const [sensibility, setSensibility] = useState("0");
   const [numberOfPlayers, setNumberOfPlayers] = useState("0");
   const [players, setPlayers] = useState([]);
@@ -174,7 +174,7 @@ export function Start(props) {
     // quiero filtrar los partidos donde participa un jugador
     const teamsMappedFromMatches = matchesState
       .map((match) => match.teams)
-      .flat(); ///con esto se quitar un array de la jerarquia
+      .flat();
     const pointList = teamsMappedFromMatches
       .filter((team) => team.members.some((member) => member.id === id))
       .map((team) => team.points);
@@ -209,7 +209,7 @@ export function Start(props) {
         {estado === 1 ? (
           <div className="ancho">
             {" "}
-            <NameSkills
+            <NameAndSkills
               sensibility={0}
               players={players}
               setPlayerName={setPlayerName}
