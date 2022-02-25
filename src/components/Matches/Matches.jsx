@@ -23,11 +23,15 @@ export function Matches(props) {
               {" "}
               <input
                 type="text"
-                onChange={(e) => props.matchResult(e, match.id)}
+                onChange={(e) =>
+                  props.matchResult(e, match.id, props.matchesState)
+                }
               />{" "}
               <input
                 type="text"
-                onChange={(e) => props.matchResult2(e, match.id)}
+                onChange={(e) =>
+                  props.matchResult2(e, match.id, props.matchesState)
+                }
               />{" "}
             </div>
           </div>

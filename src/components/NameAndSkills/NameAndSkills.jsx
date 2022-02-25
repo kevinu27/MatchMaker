@@ -43,7 +43,9 @@ export function NameAndSkills(props) {
               type="text"
               value={player.name}
               key={player.id}
-              onChange={(e) => props.setPlayerName(player.id, e.target.value)}
+              onChange={(e) =>
+                props.setPlayerName(e, player.id, e.target.value, props.players)
+              }
             />
             <input
               type="text"

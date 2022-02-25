@@ -8,7 +8,7 @@ export function NumberOfPlayersInput(props) {
         <Button
           variant="btn btn-light"
           type="submit"
-          onClick={(e) => props.funcion(e)}
+          onClick={(e) => props.generatePlayers(e)}
         >
           Generate players
         </Button>
