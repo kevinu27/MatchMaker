@@ -21,8 +21,11 @@ input {
   width: 100%;
   display: flex;
   justify-content: center;
+  margin-top: 5%;
   /* border: 2px solid red; */
-  height: 100%;
+  /* height: 100%; */
+  /* position: absolute;
+  top: 50%; */
 }
 .ancho {
   display: flex;
@@ -62,15 +65,6 @@ input {
   margin-top: 5%;
 }
 
-.header {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  /* border: 2px solid yellow; */
-  margin-bottom: 10%;
-  height: 50%;
-}
-
 .subheader {
   display: flex;
   width: 90%;
@@ -92,6 +86,8 @@ input {
   display: flex;
   justify-content: center;
   /* border: 1px solid green; */
+  /* position: absolute;
+  top: 40%; */
 }
 
 .MatchRow {
