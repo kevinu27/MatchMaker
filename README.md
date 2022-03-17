@@ -27,7 +27,7 @@ This app provides a list of matches made out of the inserted players. These matc
   <li> Top Players ranking points wise </li>
   <li> Won matches vs lost matches</li>
   <li> Average points per match </li>
-  <li> Played matches history with score and players</li>
+  <li> Played matches history with score and players </li>
 
   </ul>
 <p> </p>
