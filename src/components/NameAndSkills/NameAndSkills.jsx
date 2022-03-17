@@ -10,12 +10,6 @@ export function NameAndSkills(props) {
   const sliderChange = (e) => {
     setSensibility(e.target.value);
   };
-  // const addOptions = (e) => {
-  //   const newOption = [...options, e.target.value];
-  //   console.log("e.target.value", e.target.value);
-  //   setOptions(newOption);
-  //   console.log("options", options);
-  // };
 
   const changePlayerSkills = () => {
     //mas adelante crear la funcion bien en el componenete start
@@ -28,17 +22,14 @@ export function NameAndSkills(props) {
   });
   const baseURL = "http://localhost:5001/api/getAllPlayers";
 
-  const afterLoad = (e) => {
-    console.log("afterload");
-    setOptions(e.target.value);
+  const getMongoUserObjectFromInputName = () => {
+    console.log("getMongoUserObjectFromInputName!!!!!!!!!!!!!!!!!");
 
-    console.log(options);
+    ///poner aqui que si coincide el nombre del jugador en el input con algun objeto de la base de datos que ese objeto
+    //// se guarde en el partido
+    /// todavia no se si en el objeto matches.teams.player, o añadirle unas propiedades al objeto que sean esos jugadores
   };
 
-  const keepUser = () => {
-    console.log("keepUser!!!!!!!!!!!!!!!!!");
-  };
-  // afterLoad();
   useEffect(() => {
     console.log("useEffect");
     getAllPlayersAxios.get(baseURL).then((usersFromDatabase) => {
@@ -91,6 +82,9 @@ export function NameAndSkills(props) {
                         props.players
                       );
                       console.log("e.target.value", e.target.value);
+
+                      getMongoUserObjectFromInputName();
+
                       // afterLoad(e);
                     }}
                   />
