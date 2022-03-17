@@ -14,12 +14,13 @@ import { generateMatch } from "../functions/functions";
 import { matchResult } from "../functions/functions";
 import { matchResult2 } from "../functions/functions";
 import { sortPlayers } from "../functions/functions";
+import Button from "react-bootstrap/Button";
 
 export function Main(props) {
   const [sensibility, setSensibility] = useState("0");
   const [numberOfPlayers, setNumberOfPlayers] = useState("0");
   const [players, setPlayers] = useState([]);
-  const [page, setPage] = useState(0);
+  // const [page, setPage] = useState(0);
   const [matchesState, setMatches] = useState([]);
 
   const changePlayerSkills = (playerId, playerSkills) => {
@@ -58,33 +59,34 @@ export function Main(props) {
     });
     return pointReduced;
   }
+
   //////////////////////////////////////////////////////////////////////////////////////Return/////////////////////////////////////////////////////////////////////////////
   return (
     <>
-      <Header
+      {/* <Header
         back={(e) => {
           setPage(back(page));
         }}
         matchMakerTitle={(e) => setPage(mainPage(page))}
-      />
+      /> */}
       <div className="labelNPlayer">
-        {page === 0 ? <p> Number of players </p> : <div> </div>}
+        {props.page === 0 ? <p> Number of players </p> : <div> </div>}
       </div>
       <div id="NoRootDiv">
-        {page === 0 ? (
+        {props.page === 0 ? (
           <>
             <NumberOfPlayersInput
               numberOfPlayer={(e) => setNumberOfPlayers(getNumberOfPlayers(e))}
               generatePlayers={(e) => {
                 setPlayers(getPlayers(e, numberOfPlayers));
-                setPage(1);
+                props.setPage(1);
               }}
             />
           </>
         ) : (
           <div> </div>
         )}
-        {page === 1 ? (
+        {props.page === 1 ? (
           <div className="ancho">
             {" "}
             <NameAndSkills
@@ -96,7 +98,7 @@ export function Main(props) {
               generateMatch={
                 (e, players) => {
                   setMatches(generateMatch(e, players));
-                  setPage(2);
+                  props.setPage(2);
                 }
 
                 //  generateMatch
@@ -107,7 +109,7 @@ export function Main(props) {
           <div> </div>
         )}
 
-        {page === 2 ? (
+        {props.page === 2 ? (
           <div className="matchesDiv">
             <Matches
               matchesState={matchesState}
@@ -123,10 +125,19 @@ export function Main(props) {
               }}
               totalEachPlayersPoints={totalEachPlayersPoints}
             />
+            <Button
+              onClick={(e) => {
+                props.setPage(3);
+              }}
+            >
+              siguiente pagina
+            </Button>
           </div>
         ) : (
           <div> </div>
         )}
+
+        {props.page === 3 ? <p> show all player </p> : <div> </div>}
       </div>
     </>
   );

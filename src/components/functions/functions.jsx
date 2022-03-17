@@ -9,7 +9,7 @@ export const getPlayers = (e, numberOfPlayers) => {
       points: 0,
     };
     newPlayers.push(newPlayer);
-    // console.table(newPlayers);
+    //console.table(newPlayers);
   }
   return newPlayers;
 };

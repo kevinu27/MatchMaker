@@ -8,8 +8,9 @@ function Modal({
   modalOpenLogin,
   modalOpenSignUp,
   setModalOpenLogin,
-  setModalOpenSignIn,
   setModalOpenSignUp,
+  storeUser,
+  setLoggedUserName,
 }) {
   return (
     <div
@@ -17,7 +18,7 @@ function Modal({
       onClick={(e) => {
         e.stopPropagation();
         setModalOpenLogin(false);
-        setModalOpenSignIn(false);
+
         setModalOpenSignUp(false);
       }}
     >
@@ -31,7 +32,7 @@ function Modal({
           <button
             onClick={() => {
               setModalOpenLogin(false);
-              setModalOpenSignIn(false);
+
               setModalOpenSignUp(false);
             }}
           >
@@ -42,7 +43,13 @@ function Modal({
           {modalOpenSignUp === true && (
             <Signup setModalOpenSignUp={setModalOpenSignUp} />
           )}
-          {modalOpenLogin === true && <Login />}
+          {modalOpenLogin === true && (
+            <Login
+              setModalOpenLogin={setModalOpenLogin}
+              storeUser={storeUser}
+              setLoggedUserName={setLoggedUserName}
+            />
+          )}
 
           {/*   <h1>Are You Sure You Want to Continue?</h1>
         </div>

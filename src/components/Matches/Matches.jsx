@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
+import axios from "axios";
 
 export function Matches(props) {
+  const matchAxios = axios.create({
+    withCredentials: true,
+  });
+  const baseURL = "http://localhost:5001/api/match/newMatch";
+  const MatchesfromProps = props.matchesState;
+
   return (
     <>
       <div className="matchesDiv">
-        {props.matchesState.map((match) => (
-          <div className="MatchRow">
+        {props.matchesState.map((match, index) => (
+          <div className="MatchRow" key={index}>
             <div className="playersTeam">
               <p className="player">{match.teams[0].members[0].name}</p>{" "}
               <p className="player">{match.teams[0].members[1].name}</p>
@@ -40,7 +47,13 @@ export function Matches(props) {
         <Button
           variant="btn btn-light submitMatchButton"
           type="submit"
-          onClick={(e) => props.sortPlayers()}
+          onClick={(e) => {
+            console.log("MatchesfromProps", MatchesfromProps);
+
+            matchAxios.post(baseURL, MatchesfromProps).then((match) => {
+              console.log("match", match);
+            });
+          }}
         >
           Submit Result
         </Button>

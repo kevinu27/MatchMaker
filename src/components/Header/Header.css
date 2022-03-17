@@ -68,3 +68,23 @@ li {
 hr {
   width: 100%;
 }
+
+.menuUser {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.2%;
+  border: 2px solid red;
+}
+
+.userName {
+  display: flex;
+  /* height: 100%; */
+  align-items: center;
+  align-self: center;
+  border: 2px solid green;
+}
+
+a {
+  color: rgb(40, 44, 52);
+}

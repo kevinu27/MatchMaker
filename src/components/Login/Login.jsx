@@ -4,11 +4,11 @@ import { Container, Form, Button, Row, Col } from "react-bootstrap";
 import axios from "axios";
 import "./Login.css";
 
-function Login() {
+function Login(props) {
   const loginAxios = axios.create({
     withCredentials: true,
   });
-  const baseURL = "http://localhost:5012/api/login";
+  const baseURL = "http://localhost:5001/api/login";
 
   const [username, setUsername] = useState("");
   const [pwd, setPwd] = useState("");
@@ -26,11 +26,18 @@ function Login() {
   const HandleFormSubmit = (e) => {
     e.preventDefault();
 
-    loginAxios.post(baseURL, { username, pwd }).then((response) => {
+    loginAxios.post(baseURL, { username, pwd }).then((loggedUserfromServer) => {
       console.log("Login");
+      props.storeUser(loggedUserfromServer.data);
+      console.log(
+        "loggedUserfromServer.data.username",
+        loggedUserfromServer.data.username
+      );
       setUsername("");
       setPwd("");
-      //   props.setModalOpenSignUp(false);
+      props.setLoggedUserName(loggedUserfromServer.data.username);
+
+      props.setModalOpenLogin(false);
       /// setstate de un div que ponga mensaje de conectado con exito
     });
   };
