@@ -1,4 +1,5 @@
 import logo from "./logo.svg";
+
 // import ReactDOM from "react-dom";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.css";
@@ -30,7 +31,7 @@ function App() {
   const isLoggedIn = axios.create({
     withCredentials: true,
   });
-  const baseURL = "http://localhost:5001/api/isloggedin";
+  const baseURL = `http://localhost:5000/api/isloggedin`;
 
   useEffect(() => {
     console.log("loggedUser", loggedUser);
@@ -49,6 +50,7 @@ function App() {
               setPage(back(page));
             }}
             page={page}
+            setPage={setPage}
             matchMakerTitle={(e) => {
               setPage(mainPage(page));
             }}
@@ -61,8 +63,8 @@ function App() {
             <Route path="/" exact>
               <Main page={page} setPage={setPage} />
             </Route>
-            <Route path="/profile" exact>
-              <Profile />
+            <Route path="/profile/:id" exact>
+              <Profile loggedUser={loggedUser} />
             </Route>
           </Switch>
         </div>

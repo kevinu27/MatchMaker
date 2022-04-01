@@ -6,6 +6,7 @@ export function NameAndSkills(props) {
   const [sensibility, setSensibility] = useState("0");
   const [options, setOptions] = useState([]);
   const [users, setUsers] = useState([]);
+  // const [registeredMembers, setRegisteredMembers] = useState([]);
 
   const sliderChange = (e) => {
     setSensibility(e.target.value);
@@ -20,11 +21,18 @@ export function NameAndSkills(props) {
   const getAllPlayersAxios = axios.create({
     withCredentials: true,
   });
-  const baseURL = "http://localhost:5001/api/getAllPlayers";
+  const baseURL = `http://localhost:5000/api/getAllPlayers`;
 
-  const getMongoUserObjectFromInputName = () => {
+  const getMongoUserObjectFromInputName = (e, player) => {
     console.log("getMongoUserObjectFromInputName!!!!!!!!!!!!!!!!!");
+    console.log("persona seleccionada de options", e.target.value);
+    const registeredUser = users.map((user) =>
+      user.username === e.target.value
+        ? (player._id = user._id) //props.setRegisteredMembers([...props.registeredMembers, user._id]) /// aqui en ves de meterlo en el estado de registered members, hacer que se ponga en el player
+        : null
+    );
 
+    console.log("registeredMembers", props.registeredMembers);
     ///poner aqui que si coincide el nombre del jugador en el input con algun objeto de la base de datos que ese objeto
     //// se guarde en el partido
     /// todavia no se si en el objeto matches.teams.player, o añadirle unas propiedades al objeto que sean esos jugadores
@@ -73,17 +81,17 @@ export function NameAndSkills(props) {
                     list="country-list"
                     type="text"
                     value={player.name}
-                    key={player.id}
+                    key={player.playerIndex}
                     onChange={(e) => {
                       props.setPlayerName(
                         e,
-                        player.id,
+                        player.playerIndex,
                         e.target.value,
                         props.players
                       );
                       console.log("e.target.value", e.target.value);
 
-                      getMongoUserObjectFromInputName();
+                      getMongoUserObjectFromInputName(e, player);
 
                       // afterLoad(e);
                     }}
@@ -103,8 +111,8 @@ export function NameAndSkills(props) {
               <input
                 type="text"
                 value={player.skills}
-                key={player.id}
-                //   onChange={(e) => changePlayerSkills(player.id, e.target.value)}
+                key={player.playerIndex}
+                // onChange={(e) => changePlayerSkills(player.id, e.target.value)}
               />
             </div>
           </>

@@ -4,7 +4,7 @@ export const getPlayers = (e, numberOfPlayers) => {
   for (let i = 0; i < numberOfPlayers; i++) {
     const newPlayer = {
       name: "",
-      id: i,
+      playerIndex: i,
       skills: 0,
       points: 0,
     };
@@ -16,7 +16,7 @@ export const getPlayers = (e, numberOfPlayers) => {
 
 // const changePlayerSkills = (playerId, playerSkills) => {
 //   const playersCopy = [...players];
-//   const playerToChange = playersCopy.find((player) => player.id === playerId);
+//   const playerToChange = playersCopy.find((player) => player.playerIndex === playerId);
 //   playerToChange.skills = playerSkills;
 //   setPlayers(playersCopy);
 // };
@@ -154,7 +154,9 @@ export function generateMatch(players) {
 export const setPlayerName = (e, playerId, playerName, players) => {
   const playersCopy = [...players];
 
-  const playerToChange = playersCopy.find((player) => player.id === playerId);
+  const playerToChange = playersCopy.find(
+    (player) => player.playerIndex === playerId
+  );
   playerToChange.name = playerName;
   return playersCopy; // porque no es es playerToChange;
 };
@@ -164,6 +166,9 @@ export const setPlayerName = (e, playerId, playerName, players) => {
 // };
 
 export function totalEachPlayersPoints(id, matchesState, players) {
+  console.log("id", id);
+  console.log("matchesState", matchesState);
+  console.log("players111", players);
   const playersCopy = [...players];
   const teamsMappedFromMatches = [...matchesState]
     .map((match) => match.teams)

@@ -6,8 +6,8 @@ export function Matches(props) {
   const matchAxios = axios.create({
     withCredentials: true,
   });
-  const baseURL = "http://localhost:5001/api/match/newMatch";
-  const MatchesfromProps = props.matchesState;
+  const baseURL = `http://localhost:5000/api/match/newMatch`;
+  // const MatchesfromProps = props.matchesState;
 
   return (
     <>
@@ -48,11 +48,25 @@ export function Matches(props) {
           variant="btn btn-light submitMatchButton"
           type="submit"
           onClick={(e) => {
-            console.log("MatchesfromProps", MatchesfromProps);
+            console.log(
+              "props.registered..........Member.",
+              props.registeredMembers
+            );
 
-            matchAxios.post(baseURL, MatchesfromProps).then((match) => {
-              console.log("match", match);
-            });
+            //   const game= {
+            //   games: props.matchState,
+            //   type:
+            // }
+            // const matchWithRegisteredMembersToMatch = props.matchesState;
+            // matchWithRegisteredMembersToMatch.id = props.registeredMembers;
+            // props.setMatches(matchWithRegisteredMembersToMatch);
+
+            console.log(
+              "props.matchesState justo antes de enviar",
+              props.matchesState
+            );
+
+            matchAxios.post(baseURL, props.matchesState).then((match) => {});
           }}
         >
           Submit Result
@@ -74,7 +88,12 @@ export function Matches(props) {
                 </div>
                 <div className="playerRankingDiv">
                   <p className="player">
-                    {props.totalEachPlayersPoints(player.id)}
+                    {console.log("player....-----.", player.playerIndex)}
+                    {newFunction(player.playerIndex)}
+                    {/* {console.log(
+                        "newFunction(player.id)",
+                        newFunction(player.id)
+                      )} */}
                   </p>{" "}
                 </div>
               </div>
@@ -83,4 +102,35 @@ export function Matches(props) {
       </div>
     </>
   );
+
+  function newFunction(id) {
+    // quiero filtrar los partidos donde participa un jugador
+    console.log("id", id);
+    const teamsMappedFromMatches = props.matchesState
+      .map((match) => match.teams)
+      .flat(); ///con esto se quitar un array de la jerarquia
+    console.log("teamsMappedFromMatches", teamsMappedFromMatches);
+    const pointList = teamsMappedFromMatches
+      .filter((team) =>
+        team.members.some((member) => member.playerIndex === id)
+      )
+      .map((team) => team.points);
+    const reducer = (previousValue, currentValue) =>
+      previousValue + currentValue;
+    const pointReduced = pointList.reduce(reducer);
+
+    const playersCopy = [...props.players];
+    ///  Por que coño con players.forEach((player) => { o con playersCopy.forEach((player) => {  me actualiza el estado????????????
+    props.players.forEach((player) => {
+      if (player.playerIndex === id) {
+        player.points = pointReduced;
+      }
+    });
+
+    console.log("playersCopy", playersCopy);
+    console.log("playerState", props.players);
+    console.log("--------------");
+
+    return pointReduced;
+  }
 }

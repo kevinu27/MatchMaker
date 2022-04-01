@@ -7,7 +7,7 @@ function Signup(props) {
   const signupAxios = axios.create({
     withCredentials: true,
   });
-  const baseURL = "http://localhost:5001/api/signup";
+  const baseURL = `http://localhost:5000/api/signup`;
 
   const [username, setUsername] = useState("");
   const [pwd, setPwd] = useState("");

@@ -47,24 +47,28 @@ export function Header(props) {
               <div className="vector">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
+                  width="48"
+                  height="48"
                   fill="currentColor"
                   class="bi bi-file-person-fill"
                   viewBox="0 0 16 16"
+                  onClick={unfoldMenu}
                 >
                   <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm-1 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm-3 4c2.623 0 4.146.826 5 1.755V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-1.245C3.854 11.825 5.377 11 8 11z" />
                 </svg>
-                <img
+                {/* <img
                   src={iconVector}
                   alt="User"
                   className="UserIcon"
                   onClick={unfoldMenu}
-                ></img>
+                ></img> */}
               </div>
-              <div className="userName">
-                {props.loggedUser ? <p> {loggedUserName}</p> : null}
-              </div>
+
+              {props.loggedUser ? (
+                <div className="name">
+                  <p> {loggedUserName}</p>{" "}
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
@@ -100,8 +104,8 @@ export function Header(props) {
               {props.loggedUser && <hr />}
 
               {props.loggedUser ? (
-                <Link to="/profile">
-                  <li>Profile</li>
+                <Link to={`/profile/${props.loggedUser._id}`}>
+                  <li onClick={() => props.setPage(5)}>Profile</li>
                 </Link>
               ) : null}
               <hr />
@@ -126,15 +130,17 @@ export function Header(props) {
             setModalOpenLogin={setModalOpenLogin}
             storeUser={props.storeUser}
             setLoggedUserName={setLoggedUserName}
+            BackendPort={props.BackendPort}
           >
             {" "}
-            <Login></Login>
+            <Login BackendPort={props.BackendPort}></Login>
           </Modal>
         ) : null}
         {modalOpenSignIn ? (
           <Modal
             setModalOpenLogin={setModalOpenLogin}
             setModalOpenSignUp={setModalOpenSignUp}
+            BackendPort={props.BackendPort}
           />
         ) : null}
         {modalOpenSignUp ? (
@@ -142,6 +148,7 @@ export function Header(props) {
             modalOpenSignUp={modalOpenSignUp}
             setModalOpenLogin={setModalOpenLogin}
             setModalOpenSignUp={setModalOpenSignUp}
+            BackendPort={props.BackendPort}
           />
         ) : null}
       </div>

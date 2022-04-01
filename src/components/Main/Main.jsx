@@ -15,6 +15,8 @@ import { matchResult } from "../functions/functions";
 import { matchResult2 } from "../functions/functions";
 import { sortPlayers } from "../functions/functions";
 import Button from "react-bootstrap/Button";
+import { Profile } from "../profile/Profile";
+import { totalEachPlayersPoints } from "../functions/functions";
 
 export function Main(props) {
   const [sensibility, setSensibility] = useState("0");
@@ -22,10 +24,13 @@ export function Main(props) {
   const [players, setPlayers] = useState([]);
   // const [page, setPage] = useState(0);
   const [matchesState, setMatches] = useState([]);
+  const [registeredMembers, setRegisteredMembers] = useState([]);
 
   const changePlayerSkills = (playerId, playerSkills) => {
     const playersCopy = [...players];
-    const playerToChange = playersCopy.find((player) => player.id === playerId);
+    const playerToChange = playersCopy.find(
+      (player) => player.playerIndex === playerId
+    );
     playerToChange.skills = playerSkills;
     setPlayers(playersCopy);
   };
@@ -41,24 +46,27 @@ export function Main(props) {
     setSensibility(e.target.value);
   };
 
-  function totalEachPlayersPoints(id) {
-    // quiero filtrar los partidos donde participa un jugador
-    const teamsMappedFromMatches = matchesState
-      .map((match) => match.teams)
-      .flat();
-    const pointList = teamsMappedFromMatches
-      .filter((team) => team.members.some((member) => member.id === id))
-      .map((team) => team.points);
-    const reducer = (previousValue, currentValue) =>
-      previousValue + currentValue;
-    const pointReduced = pointList.reduce(reducer);
-    players.forEach((player) => {
-      if (player.id === id) {
-        player.points = pointReduced;
-      }
-    });
-    return pointReduced;
-  }
+  // function totalEachPlayersPoints(id) {
+  //   // quiero filtrar los partidos donde participa un jugador
+  //   console.log("totalEachPlayersPoints");
+  //   const teamsMappedFromMatches = matchesState
+  //     .map((match) => match.teams)
+  //     .flat();
+  //   const pointList = teamsMappedFromMatches
+  //     .filter((team) =>
+  //       team.members.some((member) => member.playerIndex === id)
+  //     )
+  //     .map((team) => team.points);
+  //   const reducer = (previousValue, currentValue) =>
+  //     previousValue + currentValue;
+  //   const pointReduced = pointList.reduce(reducer);
+  //   players.forEach((player) => {
+  //     if (player.playerIndex === id) {
+  //       player.points = pointReduced;
+  //     }
+  //   });
+  //   return pointReduced;
+  // }
 
   //////////////////////////////////////////////////////////////////////////////////////Return/////////////////////////////////////////////////////////////////////////////
   return (
@@ -92,6 +100,8 @@ export function Main(props) {
             <NameAndSkills
               sensibility={0}
               players={players}
+              setRegisteredMembers={setRegisteredMembers}
+              registeredMembers={registeredMembers}
               setPlayerName={(e, playerId, playerName, players) => {
                 setPlayers(setPlayerName(e, playerId, playerName, players));
               }}
@@ -112,6 +122,9 @@ export function Main(props) {
         {props.page === 2 ? (
           <div className="matchesDiv">
             <Matches
+              setRegisteredMembers={setRegisteredMembers}
+              registeredMembers={registeredMembers}
+              setMatches={setMatches}
               matchesState={matchesState}
               matchResult={(e, id, matchesState) => {
                 setMatches(matchResult(e, id, matchesState));
